@@ -5,6 +5,7 @@
 package gestorbibliotecacliente;
 
 import gestorbibliotecacomun.GestorBibliotecaIntf;
+import gestorbibliotecacomun.TDatosRepositorio;
 import java.util.Scanner;
 import java.rmi.RemoteException;
 import java.rmi.server.*;
@@ -18,7 +19,8 @@ import gestorbibliotecacomun.TLibro;
  */
 public class GestorBibliotecaCliente {
 
-    static Scanner sc = new Scanner(System.in);
+    static Scanner scInt = new Scanner(System.in);
+    static Scanner scString = new Scanner(System.in);
 
     /**
      * @param args the command line arguments
@@ -31,14 +33,14 @@ public class GestorBibliotecaCliente {
         int idAdministrador = 0;
         String nombreFichero = "";
         int NumLibros = 0;
-        TLibro libro = new TLibro();
+        TLibro libro = null;
         String isbn = "";
         String autor = "";
         String titulo = "";
         int anio = 0;
         String pais = "";
         String idioma = "";
-        TLibro nuevoLibro = new TLibro();//En C lo declarabámos como TNuevo, pero ya no existen esas estructuras en la versión de Java.
+        TLibro nuevoLibro = null;//En C lo declarabámos como TNuevo, pero ya no existen esas estructuras en la versión de Java.
         int campoElegido = 0;
         String textoABuscar = "";
         char codigoBusqueda = '\0';
@@ -48,6 +50,9 @@ public class GestorBibliotecaCliente {
         char confirmacionCompra = '\0';
         int numeroLibrosComprados = 0;
         int numeroLibrosRetirados = 0;
+        int numeroRepositorios = 0;
+        TDatosRepositorio repositorio = null;
+        int repositorioElegido = 0;
 
         //Declaramos variables result como en la práctica de C:
         int result_1 = -1;
@@ -76,9 +81,10 @@ public class GestorBibliotecaCliente {
                         break;
                     }
                     case 1: {
-                        System.out.print("Por favor inserte la contraseña de Administracion:\n");
-                        contrasenha = sc.nextLine();
-                        result_1 = GestorStub.Conexion(pais);
+                        System.out.print("Por favor inserte la contrasenha de Administracion:\n");
+                        contrasenha = scString.nextLine();
+                        System.out.println("La contrasenha introducida es igual a " + contrasenha);
+                        result_1 = GestorStub.Conexion(contrasenha);
                         //En Java los métodos del stub no pueden devolver nulo como en C, saltaría a la excepción en tal caso.
                         if (result_1 == -2) {
                             System.out.print("ERROR: la contrasenha introducida es incorrecta\n");
@@ -102,7 +108,7 @@ public class GestorBibliotecaCliente {
                                     }
                                     case 1: {
                                         System.out.print("Introduce el nombre del fichero de datos:\n");
-                                        nombreFichero = sc.nextLine();
+                                        nombreFichero = scString.nextLine();
                                         result_3 = GestorStub.AbrirRepositorio(idAdministrador, nombreFichero);
                                         if (result_3 == -1) {
                                             System.out.print("ERROR: ya hay un administrador logueado\n");
@@ -110,6 +116,30 @@ public class GestorBibliotecaCliente {
                                             System.out.print("ERROR: error al cargar los datos\n");
                                         } else if (result_3 == 1) {
                                             System.out.print("Datos cargados y ordenados correctamente\n");
+                                        }
+                                        break;
+                                    }
+                                    case 2: {
+                                        numeroRepositorios = GestorStub.NRepositorios(idAdministrador);
+                                        System.out.println("POS\tNOMBRE\tDIRECCION\tNº LIBROS");
+                                        System.out.println("*********************************");
+                                        for (int i = 1; i <= numeroRepositorios; i++) {
+                                            repositorio = GestorStub.DatosRepositorio(idAdministrador, i);
+                                            if (repositorio != null) {
+                                                System.out.println(i + "\t" + repositorio.getNombre() + "\t" + repositorio.getDireccion() + "\t" + repositorio.getNumLibros());
+                                            }
+                                        }
+                                        System.out.println("Elige repositorio:");
+                                        repositorioElegido = scInt.nextInt();
+                                        result_4 = GestorStub.GuardarRepositorio(idAdministrador, repositorioElegido);
+                                        if (result_4 == -1) {
+                                            System.out.print("ERROR: ya hay un administrador logueado\n");
+                                        } else if (result_4 == -2) {
+                                            System.out.print("ERROR: el repositorio no existe\n");
+                                        } else if (result_4 == 0) {
+                                            System.out.print("ERROR: no se ha podido guardar a fichero el/los repositorios\n");
+                                        } else if (result_4 == 1) {
+                                            System.out.print("Datos guardados correctamente\n");
                                         }
                                         break;
                                     }
@@ -141,7 +171,7 @@ public class GestorBibliotecaCliente {
             System.out.print("\t0.- Salir\n");
             System.out.print("\n");
             System.out.print("  Elige opcion:\n");
-            opcionElegida = sc.nextInt();
+            opcionElegida = scInt.nextInt();
         } while (opcionElegida < 0 || opcionElegida > 4);
         return opcionElegida;
     }
@@ -162,13 +192,13 @@ public class GestorBibliotecaCliente {
             System.out.print("\t8.- Listar libros\n");
             System.out.print("\t0.- Salir\n");
             System.out.print("  Elige opcion:\n");
-            opcionElegida = sc.nextInt();
+            opcionElegida = scInt.nextInt();
         } while (opcionElegida < 0 || opcionElegida > 8);
         return opcionElegida;
     }
 
     static void esperarEntradaPorConsola() {
         System.out.print("Introduzca cualquier numero para continuar.....\n");
-        sc.nextInt();
+        scInt.nextInt();
     }
 }
