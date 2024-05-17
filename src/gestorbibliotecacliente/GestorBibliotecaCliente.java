@@ -21,6 +21,7 @@ public class GestorBibliotecaCliente {
 
     static Scanner scInt = new Scanner(System.in);
     static Scanner scString = new Scanner(System.in);
+    static Scanner scChar = new Scanner(System.in);
 
     /**
      * @param args the command line arguments
@@ -66,7 +67,7 @@ public class GestorBibliotecaCliente {
         int result_8 = -1;
         int result_9 = -1;
         int result_10 = -1;
-        int result_11 = -1;
+        TLibro result_11 = -1;
         int result_12 = -1;
         int result_13 = -1;
         int result_14 = -1;
@@ -122,7 +123,7 @@ public class GestorBibliotecaCliente {
                                     }
                                     case 2: {
                                         numeroRepositorios = GestorStub.NRepositorios(idAdministrador);
-                                        System.out.println("El numero de repositorios es "+numeroRepositorios);
+                                        System.out.println("El numero de repositorios es " + numeroRepositorios);
                                         System.out.println("POS\tNOMBRE\tDIRECCION\tNº LIBROS");
                                         System.out.println("*********************************");
                                         for (int i = 1; i <= numeroRepositorios; i++) {
@@ -209,7 +210,18 @@ public class GestorBibliotecaCliente {
                                             System.out.print("ERROR: ya hay un administrador logueado\n");
                                         } else {
                                             // Tenemos la posición del libro buscado en result_10.
-                                            
+                                            result_11 = GestorStub.Descargar(idAdministrador, -1, result_10);
+                                            if (result_11 == null) {
+                                                System.out.print("ERROR: no se ha podido descargar el libro\n");
+                                            } else {
+                                                System.out.print(libro.getTitulo() + "\t" + libro.getIsbn() + "\t" + libro.getNoLibros() + "\t" + libro.getNoPrestados() + "\t" + libro.getNoListaEspera() + "\n");
+                                                System.out.print(libro.getAutor() + "\t" + libro.getPais() + "\t" + libro.getIdioma() + "\t" + libro.getAnio());
+                                                System.out.print("¿ Es este el libro al que desea comprar más unidades (s/n) ?\n");
+                                                confirmacionCompra = scChar.next().charAt(0);
+                                                if (confirmacionCompra != 's') { // Si el usuario no ha confirmado con s:
+                                                    System.out.print("*** Compra abortada ***\n");
+                                                }
+                                            }
                                         }
                                         break;
                                     }
