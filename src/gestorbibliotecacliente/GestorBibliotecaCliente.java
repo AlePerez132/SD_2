@@ -53,6 +53,7 @@ public class GestorBibliotecaCliente {
         int numeroRepositorios = 0;
         TDatosRepositorio repositorio = null;
         int repositorioElegido = 0;
+        int numeroLibrosInicial = 0;
 
         //Declaramos variables result como en la práctica de C:
         int result_1 = -1;
@@ -121,6 +122,7 @@ public class GestorBibliotecaCliente {
                                     }
                                     case 2: {
                                         numeroRepositorios = GestorStub.NRepositorios(idAdministrador);
+                                        System.out.println("El numero de repositorios es "+numeroRepositorios);
                                         System.out.println("POS\tNOMBRE\tDIRECCION\tNº LIBROS");
                                         System.out.println("*********************************");
                                         for (int i = 1; i <= numeroRepositorios; i++) {
@@ -140,6 +142,74 @@ public class GestorBibliotecaCliente {
                                             System.out.print("ERROR: no se ha podido guardar a fichero el/los repositorios\n");
                                         } else if (result_4 == 1) {
                                             System.out.print("Datos guardados correctamente\n");
+                                        }
+                                        break;
+                                    }
+                                    case 3: {
+                                        // Pedimos los datos del nuevo libro:
+                                        System.out.print("Introduce el Isbn:\n");
+                                        isbn = scString.nextLine();
+                                        System.out.print("Introduce el Autor:\n");
+                                        autor = scString.nextLine();
+                                        System.out.print("Introduce el Titulo:\n");
+                                        titulo = scString.nextLine();
+                                        System.out.print("Introduce el anio:\n");
+                                        anio = scInt.nextInt();
+                                        System.out.print("Introduce el Pais:\n");
+                                        pais = scString.nextLine();
+                                        System.out.print("Introduce el Idioma:\n");
+                                        idioma = scString.nextLine();
+                                        System.out.print("Introduce Numero de Libros inicial:\n");
+                                        numeroLibrosInicial = scInt.nextInt();
+                                        numeroRepositorios = GestorStub.NRepositorios(idAdministrador);
+                                        System.out.println("POS\tNOMBRE\tDIRECCION\tNº LIBROS");
+                                        System.out.println("*********************************");
+                                        for (int i = 1; i <= numeroRepositorios; i++) {
+                                            repositorio = GestorStub.DatosRepositorio(idAdministrador, i);
+                                            if (repositorio != null) {
+                                                System.out.println(i + "\t" + repositorio.getNombre() + "\t" + repositorio.getDireccion() + "\t" + repositorio.getNumLibros());
+                                            }
+                                        }
+                                        System.out.println("Elige repositorio:");
+                                        repositorioElegido = scInt.nextInt();
+                                        // Llenamos la variable libro:
+                                        libro.setIsbn(isbn);
+                                        libro.setAutor(autor);
+                                        libro.setTitulo(titulo);
+                                        libro.setAnio(anio);
+                                        libro.setPais(pais);
+                                        libro.setIdioma(idioma);
+
+                                        // Inicializamos los valores no pedidos por consola:
+                                        libro.setNoLibros(0);
+                                        libro.setNoListaEspera(0);
+                                        libro.setNoPrestados(0);
+
+                                        result_5 = GestorStub.NuevoLibro(idAdministrador, libro, repositorioElegido);
+
+                                        if (result_5 == -1) {
+                                            System.out.print("ERROR: ya hay un administrador logueado\n");
+                                        } else if (result_5 == 0) {
+                                            System.out.print("ERROR: ya hay un libro registrado con el ISBN dado\n");
+                                        } else if (result_5 == -2) {
+                                            System.out.print("ERROR: el repositorio no existe\n");
+                                        } else if (result_5 == 1) {
+                                            System.out.print("Se ha anhadido el nuevo libro correctamente\n");
+                                        }
+                                        break;
+                                    }
+                                    case 4: {
+                                        System.out.print("Introduce Isbn a Buscar:\n");
+                                        isbnCompra = scString.nextLine();
+                                        // Por ISBN.
+                                        result_10 = GestorStub.Buscar(idAdministrador, isbnCompra);
+                                        if (result_10 == -1) {
+                                            System.out.print("ERROR: no se ha encontrado ningun libro\n");
+                                        } else if (result_10 == -2) {
+                                            System.out.print("ERROR: ya hay un administrador logueado\n");
+                                        } else {
+                                            // Tenemos la posición del libro buscado en result_10.
+                                            
                                         }
                                         break;
                                     }
