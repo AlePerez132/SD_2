@@ -277,16 +277,16 @@ public class GestorBibliotecaCliente {
                                         break;
                                     }
                                     case 6: {//Ordenar.
-                                        System.out.println("0.- Por Isbn\n");
-                                        System.out.println("1.- Por Titulo\n");
-                                        System.out.println("2.- Por Autor\n");
-                                        System.out.println("3.- Por Anho\n");
-                                        System.out.println("4.- Por Pais\n");
-                                        System.out.println("5.- Por Idioma\n");
-                                        System.out.println("6.- Por nº de libros Disponibles\n");
-                                        System.out.println("7.- Por nº de libros Prestados\n");
-                                        System.out.println("8.- Por nº de libros en Espera\n");
-                                        System.out.println("Elige el campo que ordenara los libros:\n");
+                                        System.out.println("0.- Por Isbn");
+                                        System.out.println("1.- Por Titulo");
+                                        System.out.println("2.- Por Autor");
+                                        System.out.println("3.- Por Anho");
+                                        System.out.println("4.- Por Pais");
+                                        System.out.println("5.- Por Idioma");
+                                        System.out.println("6.- Por nº de libros Disponibles");
+                                        System.out.println("7.- Por nº de libros Prestados");
+                                        System.out.println("8.- Por nº de libros en Espera");
+                                        System.out.println("Elige el campo para ordenar los libros:");
                                         campoElegido = scInt.nextInt();
                                         // Llamamos a ordenar en el servidor:
                                         result_8 = GestorStub.Ordenar(idAdministrador, campoElegido);
@@ -399,7 +399,7 @@ public class GestorBibliotecaCliente {
                                                         }
                                                     }
                                                     if (punteroAlgunaCoincidencia[0] != false || punteroAlgunaCoincidencia[1] != false || punteroAlgunaCoincidencia[2] != false || punteroAlgunaCoincidencia[3] != false || punteroAlgunaCoincidencia[4] != false) {
-                                                        System.out.print((i + 1) + "\t" + libro.getTitulo() + "\t" + libro.getIsbn() + "\t\t" + libro.getNoLibros() + "\t" + libro.getNoPrestados() + "\t" + libro.getNoListaEspera() + "\n");
+                                                        System.out.print(i + "\t" + libro.getTitulo() + "\t" + libro.getIsbn() + "\t\t" + libro.getNoLibros() + "\t" + libro.getNoPrestados() + "\t" + libro.getNoListaEspera() + "\n");
                                                         System.out.print(libro.getAutor() + "\t" + libro.getPais() + "\t" + libro.getIdioma() + "\t" + libro.getAnio() + "\n");
                                                     }
                                                 }
@@ -424,7 +424,7 @@ public class GestorBibliotecaCliente {
                                                 if (result_11 != null) {
                                                     // Hemos recibido el resultado bien, podemos guardarlo en libro y escribir por pantalla.
                                                     libro = result_11;
-                                                    System.out.print((i + 1) + "\t" + libro.getTitulo() + "\t" + libro.getIsbn() + "\t\t" + libro.getNoLibros() + "\t" + libro.getNoPrestados() + "\t" + libro.getNoListaEspera() + "\n");
+                                                    System.out.print(i + "\t" + libro.getTitulo() + "\t" + libro.getIsbn() + "\t\t" + libro.getNoLibros() + "\t" + libro.getNoPrestados() + "\t" + libro.getNoListaEspera() + "\n");
                                                     System.out.print(libro.getAutor() + "\t" + libro.getPais() + "\t" + libro.getIdioma() + "\t" + libro.getAnio() + "\n");
                                                 }
                                             }
@@ -526,7 +526,7 @@ public class GestorBibliotecaCliente {
                                         }
                                     }
                                     if (punteroAlgunaCoincidencia[0] != false || punteroAlgunaCoincidencia[1] != false || punteroAlgunaCoincidencia[2] != false || punteroAlgunaCoincidencia[3] != false || punteroAlgunaCoincidencia[4] != false) {
-                                        System.out.print((i + 1) + "\t" + libro.getTitulo() + "\t" + libro.getIsbn() + "\t\t" + libro.getNoLibros() + "\t" + libro.getNoPrestados() + "\t" + libro.getNoListaEspera() + "\n");
+                                        System.out.print(i + "\t" + libro.getTitulo() + "\t" + libro.getIsbn() + "\t\t" + libro.getNoLibros() + "\t" + libro.getNoPrestados() + "\t" + libro.getNoListaEspera() + "\n");
                                         System.out.print(libro.getAutor() + "\t" + libro.getPais() + "\t" + libro.getIdioma() + "\t" + libro.getAnio() + "\n");
                                     }
                                 }
@@ -622,7 +622,7 @@ public class GestorBibliotecaCliente {
                                         }
                                     }
                                     if (punteroAlgunaCoincidencia[0] != false || punteroAlgunaCoincidencia[1] != false || punteroAlgunaCoincidencia[2] != false || punteroAlgunaCoincidencia[3] != false || punteroAlgunaCoincidencia[4] != false) {
-                                        System.out.print((i + 1) + "\t" + libro.getTitulo() + "\t" + libro.getIsbn() + "\t\t" + libro.getNoLibros() + "\t" + libro.getNoPrestados() + "\t" + libro.getNoListaEspera() + "\n");
+                                        System.out.print(i + "\t" + libro.getTitulo() + "\t" + libro.getIsbn() + "\t\t" + libro.getNoLibros() + "\t" + libro.getNoPrestados() + "\t" + libro.getNoListaEspera() + "\n");
                                         System.out.print(libro.getAutor() + "\t" + libro.getPais() + "\t" + libro.getIdioma() + "\t" + libro.getAnio() + "\n");
                                     }
                                 }
@@ -661,7 +661,7 @@ public class GestorBibliotecaCliente {
                                 libro = result_11;// Hemos recibido el resultado bien, podemos guardarlo en libro.
                                 punteroAlgunaCoincidencia[0] = libro.getIsbn().contains(isbnDevolucion); // Isbn:0.
                                 if (punteroAlgunaCoincidencia[0] != false) {
-                                    System.out.print((i + 1) + "\t" + libro.getTitulo() + "\t" + libro.getIsbn() + "\t\t" + libro.getNoLibros() + "\t" + libro.getNoPrestados() + "\t" + libro.getNoListaEspera() + "\n");
+                                    System.out.print(i + "\t" + libro.getTitulo() + "\t" + libro.getIsbn() + "\t\t" + libro.getNoLibros() + "\t" + libro.getNoPrestados() + "\t" + libro.getNoListaEspera() + "\n");
                                     System.out.print(libro.getAutor() + "\t" + libro.getPais() + "\t" + libro.getIdioma() + "\t" + libro.getAnio() + "\n");
                                 }
                             }
