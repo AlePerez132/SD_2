@@ -67,7 +67,7 @@ public class GestorBibliotecaCliente {
         int result_8 = -1;
         int result_9 = -1;
         int result_10 = -1;
-        TLibro result_11 = -1;
+        TLibro result_11 = null;
         int result_12 = -1;
         int result_13 = -1;
         int result_14 = -1;
@@ -173,7 +173,8 @@ public class GestorBibliotecaCliente {
                                         }
                                         System.out.println("Elige repositorio:");
                                         repositorioElegido = scInt.nextInt();
-                                        // Llenamos la variable libro:
+                                        // Reservamos memroia y llenamos la variable libro:
+                                        libro = new TLibro();
                                         libro.setIsbn(isbn);
                                         libro.setAutor(autor);
                                         libro.setTitulo(titulo);
@@ -225,12 +226,40 @@ public class GestorBibliotecaCliente {
                                         }
                                         break;
                                     }
+                                    case 8: {
+                                        // Recogemos del servidor el numero de libros:
+                                        result_9 = GestorStub.NLibros(-1); // Recogemos el nº de libros del servidor (todos los repositorios con *).
+                                        if (result_9 == -1) {
+                                            System.out.print("ERROR: el repositorio no existe\n");
+                                        } else {
+                                            System.out.print("POS\tTITULO\tISBN\tDIS\tPRE\tPOS\n");
+                                            System.out.print("\tAUTOR\tPAIS (IDIOMA)\tANIO\n");
+                                            System.out.print("*********************************************************************************************\n");
+
+                                            NumLibros = result_9;
+
+                                            for (int i = 1; i <= NumLibros; i++) {
+                                                result_11 = GestorStub.Descargar(idAdministrador, -1, i);
+                                                if (result_11 != null) {
+                                                    // Hemos recibido el resultado bien, podemos guardarlo en libro y escribir por pantalla.
+                                                    libro = result_11;
+                                                    System.out.print(i + "\t" + libro.getTitulo() + "\t" + libro.getIsbn() + "\t" + libro.getNoLibros() + "\t" + libro.getNoListaEspera() + "\n");
+                                                    System.out.print(libro.getAutor() + "\t" + libro.getPais() + "\t" + libro.getIdioma() + "\t" + libro.getAnio() + "\n");
+                                                }
+                                            }
+                                        }
+                                        break;
+                                    }
                                 }
+                                esperarEntradaPorConsola(); // Esperamos a que el usuario pulse cualquier tecla.
                             } while (opcionElegida != 0);
                             opcionElegida = -1; // Si salimos del menú de administración, reseteamos la variable. Esto lo hacemos para evitar salir del menú principal.
                         }
                         break;
                     }
+                }
+                if (opcionElegida != -1) {								// Si la opción elegida se ha introducido:
+                    esperarEntradaPorConsola(); // Esperamos a que el usuario pulse cualquier tecla.
                 }
             } while (opcionElegida != 0);
 
