@@ -53,6 +53,7 @@ public class GestorBibliotecaCliente {
         int repositorioElegido = 0;
         int numeroLibrosInicial = 0;
         boolean punteroAlgunaCoincidencia[] = {false, false, false, false, false}; // Array de booleanos para la búsqueda en todos los campos (*).
+        String isbnDevolucion = "";
 
         //Declaramos variables result como en la práctica de C:
         int result_1 = -1;
@@ -217,7 +218,7 @@ public class GestorBibliotecaCliente {
                                             } else {
                                                 libro = result_11;
                                                 System.out.print(libro.getTitulo() + "\t" + libro.getIsbn() + "\t\t" + libro.getNoLibros() + "\t" + libro.getNoPrestados() + "\t" + libro.getNoListaEspera() + "\n");
-                                                System.out.print(libro.getAutor() + "\t" + libro.getPais() + "\t" + libro.getIdioma() + "\t" + libro.getAnio()+ "\n");
+                                                System.out.print(libro.getAutor() + "\t" + libro.getPais() + "\t" + libro.getIdioma() + "\t" + libro.getAnio() + "\n");
                                                 System.out.print("¿ Es este el libro al que desea comprar más unidades (s/n) ?\n");
                                                 confirmacionCompra = scChar.next().charAt(0);
                                                 if (confirmacionCompra != 's') { // Si el usuario no ha confirmado con s:
@@ -398,7 +399,7 @@ public class GestorBibliotecaCliente {
                                                         }
                                                     }
                                                     if (punteroAlgunaCoincidencia[0] != false || punteroAlgunaCoincidencia[1] != false || punteroAlgunaCoincidencia[2] != false || punteroAlgunaCoincidencia[3] != false || punteroAlgunaCoincidencia[4] != false) {
-                                                        System.out.print((result_10 + 1) + "\t" + libro.getTitulo() + "\t" + libro.getIsbn() + "\t\t" + libro.getNoLibros() + "\t" + libro.getNoPrestados() + "\t" + libro.getNoListaEspera() + "\n");
+                                                        System.out.print((i + 1) + "\t" + libro.getTitulo() + "\t" + libro.getIsbn() + "\t\t" + libro.getNoLibros() + "\t" + libro.getNoPrestados() + "\t" + libro.getNoListaEspera() + "\n");
                                                         System.out.print(libro.getAutor() + "\t" + libro.getPais() + "\t" + libro.getIdioma() + "\t" + libro.getAnio() + "\n");
                                                     }
                                                 }
@@ -406,7 +407,6 @@ public class GestorBibliotecaCliente {
                                         }
                                         break;
                                     }
-
                                     case 8: { //Listar libro
                                         // Recogemos del servidor el numero de libros:
                                         result_9 = GestorStub.NLibros(-1); // Recogemos el nº de libros del servidor (todos los repositorios con *).
@@ -424,7 +424,7 @@ public class GestorBibliotecaCliente {
                                                 if (result_11 != null) {
                                                     // Hemos recibido el resultado bien, podemos guardarlo en libro y escribir por pantalla.
                                                     libro = result_11;
-                                                    System.out.print((result_10 + 1) + "\t" + libro.getTitulo() + "\t" + libro.getIsbn() + "\t\t" + libro.getNoLibros() + "\t" + libro.getNoPrestados() + "\t" + libro.getNoListaEspera() + "\n");
+                                                    System.out.print((i + 1) + "\t" + libro.getTitulo() + "\t" + libro.getIsbn() + "\t\t" + libro.getNoLibros() + "\t" + libro.getNoPrestados() + "\t" + libro.getNoListaEspera() + "\n");
                                                     System.out.print(libro.getAutor() + "\t" + libro.getPais() + "\t" + libro.getIdioma() + "\t" + libro.getAnio() + "\n");
                                                 }
                                             }
@@ -435,6 +435,248 @@ public class GestorBibliotecaCliente {
                                 esperarEntradaPorConsola(); // Esperamos a que el usuario pulse cualquier tecla.
                             } while (opcionElegida != 0);
                             opcionElegida = -1; // Si salimos del menú de administración, reseteamos la variable. Esto lo hacemos para evitar salir del menú principal.
+                        }
+                        break;
+                    }
+                    case 2: {
+                        System.out.print("Introduce el texto a buscar:\n");
+                        textoABuscar = scString.nextLine();
+                        System.out.print("I.- Por Isbn\n");
+                        System.out.print("T.- Por Titulo\n");
+                        System.out.print("A.- Por Autor\n");
+                        System.out.print("P.- Por Pais\n");
+                        System.out.print("D.- Por Idioma\n");
+                        System.out.print("*.- Por todos los campos\n");
+                        System.out.print("Introduce el codigo de busqueda\n");
+                        codigoBusqueda = scChar.next().charAt(0);
+                        result_9 = GestorStub.NLibros(-1); // Recogemos el nº de libros del servidor para todos los repos.
+                        repositorioElegido = -1;
+                        //Descargaremos cada libro y filtraremos:
+                        result_9 = GestorStub.NLibros(repositorioElegido); // Recogemos el nº de libros del servidor.
+                        if (result_9 == -1) {
+                            System.out.print("ERROR: el repositorio no existe\n");
+                        } else {
+                            System.out.print("POS\tTITULO\tISBN\tDIS\tPRE\tESP\n");
+                            System.out.print("\tAUTOR\tPAIS (IDIOMA)\tANIO\n");
+                            System.out.print("*********************************************************************************************\n");
+
+                            NumLibros = result_9;
+
+                            // Descargaremos cada libro del servidor. Si pasa el filtrado, lo mostraremos por pantalla:
+                            for (int i = 0; i < NumLibros; i++) {
+                                result_11 = GestorStub.Descargar(idAdministrador, repositorioElegido, i);
+                                if (result_11 != null) {
+                                    libro = result_11;// Hemos recibido el resultado bien, podemos guardarlo en libro.
+                                    // Solo mostraremos el libro si aparece la cadena buscada en los campos deseados.
+                                    // Usaremos contains.
+                                    // Para la búsqueda monocampo, emplearemos el puntero respectivo: punteroAlgunaCoincidencia[i]. i valdrá lo que diga el mapa: {Isbn:0, Titulo:1, Autor:2, Pais:3, Idioma:4}.
+                                    // Para la búsqueda multicampo (*), emplearemos todo el array de punteros: punteroAlgunaCoincidencia.
+                                    switch (codigoBusqueda) {
+                                        case 'I': {
+                                            punteroAlgunaCoincidencia[0] = libro.getIsbn().contains(textoABuscar); // Isbn:0.
+                                            punteroAlgunaCoincidencia[1] = false;
+                                            punteroAlgunaCoincidencia[2] = false;
+                                            punteroAlgunaCoincidencia[3] = false;
+                                            punteroAlgunaCoincidencia[4] = false;
+                                            break;
+                                        }
+                                        case 'T': {
+                                            punteroAlgunaCoincidencia[1] = libro.getTitulo().contains(textoABuscar); // Titulo:1.
+                                            // Inicializo el resto de punteros a false:
+                                            punteroAlgunaCoincidencia[0] = false;
+                                            punteroAlgunaCoincidencia[2] = false;
+                                            punteroAlgunaCoincidencia[3] = false;
+                                            punteroAlgunaCoincidencia[4] = false;
+                                            break;
+                                        }
+                                        case 'A': {
+                                            punteroAlgunaCoincidencia[2] = libro.getAutor().contains(textoABuscar); // Autor:2.
+                                            // Inicializo el resto de punteros a false:
+                                            punteroAlgunaCoincidencia[0] = false;
+                                            punteroAlgunaCoincidencia[1] = false;
+                                            punteroAlgunaCoincidencia[3] = false;
+                                            punteroAlgunaCoincidencia[4] = false;
+                                            break;
+                                        }
+                                        case 'P': {
+                                            punteroAlgunaCoincidencia[3] = libro.getPais().contains(textoABuscar); // Pais:3.
+                                            // Inicializo el resto de punteros a false:
+                                            punteroAlgunaCoincidencia[0] = false;
+                                            punteroAlgunaCoincidencia[1] = false;
+                                            punteroAlgunaCoincidencia[2] = false;
+                                            punteroAlgunaCoincidencia[4] = false;
+                                            break;
+                                        }
+                                        case 'D': {
+                                            punteroAlgunaCoincidencia[4] = libro.getIdioma().contains(textoABuscar); // Idioma:4.
+                                            // Inicializo el resto de punteros a false:
+                                            punteroAlgunaCoincidencia[0] = false;
+                                            punteroAlgunaCoincidencia[1] = false;
+                                            punteroAlgunaCoincidencia[2] = false;
+                                            punteroAlgunaCoincidencia[3] = false;
+                                            break;
+                                        }
+                                        case '*': {
+                                            punteroAlgunaCoincidencia[0] = libro.getIsbn().contains(textoABuscar); // Isbn:1.
+                                            punteroAlgunaCoincidencia[1] = libro.getTitulo().contains(textoABuscar); // Titulo:1.
+                                            punteroAlgunaCoincidencia[2] = libro.getAutor().contains(textoABuscar); // Autor:2.
+                                            punteroAlgunaCoincidencia[3] = libro.getPais().contains(textoABuscar); // Pais:3.
+                                            punteroAlgunaCoincidencia[4] = libro.getIdioma().contains(textoABuscar); // Idioma:4.
+                                            break;
+                                        }
+                                    }
+                                    if (punteroAlgunaCoincidencia[0] != false || punteroAlgunaCoincidencia[1] != false || punteroAlgunaCoincidencia[2] != false || punteroAlgunaCoincidencia[3] != false || punteroAlgunaCoincidencia[4] != false) {
+                                        System.out.print((i + 1) + "\t" + libro.getTitulo() + "\t" + libro.getIsbn() + "\t\t" + libro.getNoLibros() + "\t" + libro.getNoPrestados() + "\t" + libro.getNoListaEspera() + "\n");
+                                        System.out.print(libro.getAutor() + "\t" + libro.getPais() + "\t" + libro.getIdioma() + "\t" + libro.getAnio() + "\n");
+                                    }
+                                }
+                            }
+                        }
+                        break;
+                    }
+                    case 3: {//Préstamo.
+                        System.out.print("Introduce el texto a buscar:\n");
+                        textoABuscar = scString.nextLine();
+                        System.out.print("I.- Por Isbn\n");
+                        System.out.print("T.- Por Titulo\n");
+                        System.out.print("A.- Por Autor\n");
+                        System.out.print("P.- Por Pais\n");
+                        System.out.print("D.- Por Idioma\n");
+                        System.out.print("*.- Por todos los campos\n");
+                        System.out.print("Introduce el codigo de busqueda\n");
+                        codigoBusqueda = scChar.next().charAt(0);
+                        result_9 = GestorStub.NLibros(-1); // Recogemos el nº de libros del servidor para todos los repos.
+                        repositorioElegido = -1;
+                        //Descargaremos cada libro y filtraremos:
+                        result_9 = GestorStub.NLibros(repositorioElegido); // Recogemos el nº de libros del servidor.
+                        if (result_9 == -1) {
+                            System.out.print("ERROR: el repositorio no existe\n");
+                        } else {
+                            System.out.print("POS\tTITULO\tISBN\tDIS\tPRE\tESP\n");
+                            System.out.print("\tAUTOR\tPAIS (IDIOMA)\tANIO\n");
+                            System.out.print("*********************************************************************************************\n");
+
+                            NumLibros = result_9;
+
+                            // Descargaremos cada libro del servidor. Si pasa el filtrado, lo mostraremos por pantalla:
+                            for (int i = 0; i < NumLibros; i++) {
+                                result_11 = GestorStub.Descargar(idAdministrador, repositorioElegido, i);
+                                if (result_11 != null) {
+                                    libro = result_11;// Hemos recibido el resultado bien, podemos guardarlo en libro.
+                                    // Solo mostraremos el libro si aparece la cadena buscada en los campos deseados.
+                                    // Usaremos contains.
+                                    // Para la búsqueda monocampo, emplearemos el puntero respectivo: punteroAlgunaCoincidencia[i]. i valdrá lo que diga el mapa: {Isbn:0, Titulo:1, Autor:2, Pais:3, Idioma:4}.
+                                    // Para la búsqueda multicampo (*), emplearemos todo el array de punteros: punteroAlgunaCoincidencia.
+                                    switch (codigoBusqueda) {
+                                        case 'I': {
+                                            punteroAlgunaCoincidencia[0] = libro.getIsbn().contains(textoABuscar); // Isbn:0.
+                                            punteroAlgunaCoincidencia[1] = false;
+                                            punteroAlgunaCoincidencia[2] = false;
+                                            punteroAlgunaCoincidencia[3] = false;
+                                            punteroAlgunaCoincidencia[4] = false;
+                                            break;
+                                        }
+                                        case 'T': {
+                                            punteroAlgunaCoincidencia[1] = libro.getTitulo().contains(textoABuscar); // Titulo:1.
+                                            // Inicializo el resto de punteros a false:
+                                            punteroAlgunaCoincidencia[0] = false;
+                                            punteroAlgunaCoincidencia[2] = false;
+                                            punteroAlgunaCoincidencia[3] = false;
+                                            punteroAlgunaCoincidencia[4] = false;
+                                            break;
+                                        }
+                                        case 'A': {
+                                            punteroAlgunaCoincidencia[2] = libro.getAutor().contains(textoABuscar); // Autor:2.
+                                            // Inicializo el resto de punteros a false:
+                                            punteroAlgunaCoincidencia[0] = false;
+                                            punteroAlgunaCoincidencia[1] = false;
+                                            punteroAlgunaCoincidencia[3] = false;
+                                            punteroAlgunaCoincidencia[4] = false;
+                                            break;
+                                        }
+                                        case 'P': {
+                                            punteroAlgunaCoincidencia[3] = libro.getPais().contains(textoABuscar); // Pais:3.
+                                            // Inicializo el resto de punteros a false:
+                                            punteroAlgunaCoincidencia[0] = false;
+                                            punteroAlgunaCoincidencia[1] = false;
+                                            punteroAlgunaCoincidencia[2] = false;
+                                            punteroAlgunaCoincidencia[4] = false;
+                                            break;
+                                        }
+                                        case 'D': {
+                                            punteroAlgunaCoincidencia[4] = libro.getIdioma().contains(textoABuscar); // Idioma:4.
+                                            // Inicializo el resto de punteros a false:
+                                            punteroAlgunaCoincidencia[0] = false;
+                                            punteroAlgunaCoincidencia[1] = false;
+                                            punteroAlgunaCoincidencia[2] = false;
+                                            punteroAlgunaCoincidencia[3] = false;
+                                            break;
+                                        }
+                                        case '*': {
+                                            punteroAlgunaCoincidencia[0] = libro.getIsbn().contains(textoABuscar); // Isbn:1.
+                                            punteroAlgunaCoincidencia[1] = libro.getTitulo().contains(textoABuscar); // Titulo:1.
+                                            punteroAlgunaCoincidencia[2] = libro.getAutor().contains(textoABuscar); // Autor:2.
+                                            punteroAlgunaCoincidencia[3] = libro.getPais().contains(textoABuscar); // Pais:3.
+                                            punteroAlgunaCoincidencia[4] = libro.getIdioma().contains(textoABuscar); // Idioma:4.
+                                            break;
+                                        }
+                                    }
+                                    if (punteroAlgunaCoincidencia[0] != false || punteroAlgunaCoincidencia[1] != false || punteroAlgunaCoincidencia[2] != false || punteroAlgunaCoincidencia[3] != false || punteroAlgunaCoincidencia[4] != false) {
+                                        System.out.print((i + 1) + "\t" + libro.getTitulo() + "\t" + libro.getIsbn() + "\t\t" + libro.getNoLibros() + "\t" + libro.getNoPrestados() + "\t" + libro.getNoListaEspera() + "\n");
+                                        System.out.print(libro.getAutor() + "\t" + libro.getPais() + "\t" + libro.getIdioma() + "\t" + libro.getAnio() + "\n");
+                                    }
+                                }
+                            }
+                        }
+                        System.out.print("¿ Quieres sacar algún libro de la biblioteca ? (s/n) ?\n");
+                        confirmacionCompra = scChar.next().charAt(0);
+                        if (confirmacionCompra != 's') { // Si el usuario no ha confirmado con s:
+                            System.out.print("*** Prestamo abortado ***\n");
+                        } else { // Si el usuario ha confirmado con s:
+                            System.out.println("Introduce la Posicion del libro a solicitar su prestamo:");
+                            int posPrestar = scInt.nextInt();
+                            result_12 = GestorStub.Prestar(posPrestar);
+                            if (result_12 == -1) {
+                                System.out.print("ERROR: La posicion introducida no es correcta\n");
+                            } else if (result_12 == 0) {
+                                System.out.print("No hay suficientes libros disponibles, entrando en lista de espera\n");
+                            } else if (result_12 == 1) {
+                                System.out.print("*** Se ha recogido el libro de forma exitosa ***\n");
+                            }
+                        }
+                        break;
+                    }
+
+                    case 4: {//Devolución.
+                        System.out.print("Introduce Isbn a Buscar:\n");
+                        isbnDevolucion = scString.nextLine();
+                        // Por ISBN.
+                        repositorioElegido = -1;
+                        result_9 = GestorStub.NLibros(-1); // Recogemos el nº de libros del servidor para todos los repos.
+                        NumLibros = result_9;
+                        // Descargaremos cada libro del servidor. Si pasa el filtrado, lo mostraremos por pantalla:
+                        for (int i = 0; i < NumLibros; i++) {
+                            result_11 = GestorStub.Descargar(idAdministrador, repositorioElegido, i);
+                            if (result_11 != null) {
+                                libro = result_11;// Hemos recibido el resultado bien, podemos guardarlo en libro.
+                                punteroAlgunaCoincidencia[0] = libro.getIsbn().contains(isbnDevolucion); // Isbn:0.
+                                if (punteroAlgunaCoincidencia[0] != false) {
+                                    System.out.print((i + 1) + "\t" + libro.getTitulo() + "\t" + libro.getIsbn() + "\t\t" + libro.getNoLibros() + "\t" + libro.getNoPrestados() + "\t" + libro.getNoListaEspera() + "\n");
+                                    System.out.print(libro.getAutor() + "\t" + libro.getPais() + "\t" + libro.getIdioma() + "\t" + libro.getAnio() + "\n");
+                                }
+                            }
+                        }
+                        System.out.print("Introduce la posicion del libro a devolver:");
+                        int posDevolver = scInt.nextInt();
+                        result_13 = GestorStub.Devolver(posDevolver);
+                        if (result_13 == -1) {
+                            System.out.print("ERROR: La posicion introducida no es correcta\n");
+                        } else if (result_13 == 0) {
+                            System.out.print("*** Se ha devuelto el libro y se le ha dado a alguen que estaba esperando ***\n");
+                        } else if (result_13 == 1) {
+                            System.out.print("*** Se ha devuelto el libro a su estanteria ***\n");
+                        } else if (result_13 == 2) {
+                            System.out.print("ERROR: no se ha podido devolver el libro porque no hay ni usuarios en lista de espera ni libros prestados\n");
                         }
                         break;
                     }
