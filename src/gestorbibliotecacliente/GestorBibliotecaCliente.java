@@ -112,6 +112,8 @@ public class GestorBibliotecaCliente {
                                         result_3 = GestorStub.AbrirRepositorio(idAdministrador, nombreFichero);
                                         if (result_3 == -1) {
                                             System.out.print("ERROR: ya hay un administrador logueado\n");
+                                        } else if (result_3 == -2) {
+                                            System.out.print("ERROR: ya hay un fichero cargado con el mismo nombre\n");
                                         } else if (result_3 == 0) {
                                             System.out.print("ERROR: error al cargar los datos\n");
                                         } else if (result_3 == 1) {
@@ -306,6 +308,7 @@ public class GestorBibliotecaCliente {
                                         System.out.print("*.- Por todos los campos\n");
                                         System.out.print("Introduce el codigo de busqueda\n");
                                         codigoBusqueda = scChar.next().charAt(0);
+                                        numeroRepositorios = GestorStub.NRepositorios(idAdministrador);
                                         for (int i = 1; i <= numeroRepositorios; i++) {
                                             repositorio = GestorStub.DatosRepositorio(idAdministrador, i);
                                             if (repositorio != null) {
