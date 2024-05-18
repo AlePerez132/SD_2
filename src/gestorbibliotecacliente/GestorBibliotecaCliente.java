@@ -211,12 +211,13 @@ public class GestorBibliotecaCliente {
                                             System.out.print("ERROR: ya hay un administrador logueado\n");
                                         } else {
                                             // Tenemos la posición del libro buscado en result_10.
-                                            result_11 = GestorStub.Descargar(idAdministrador, -1, result_10);
+                                            result_11 = GestorStub.Descargar(idAdministrador, -1, result_10 + 1);
                                             if (result_11 == null) {
                                                 System.out.print("ERROR: no se ha podido descargar el libro\n");
                                             } else {
-                                                System.out.print(libro.getTitulo() + "\t" + libro.getIsbn() + "\t" + libro.getNoLibros() + "\t" + libro.getNoPrestados() + "\t" + libro.getNoListaEspera() + "\n");
-                                                System.out.print(libro.getAutor() + "\t" + libro.getPais() + "\t" + libro.getIdioma() + "\t" + libro.getAnio());
+                                                libro = result_11;
+                                                System.out.print(libro.getTitulo() + "\t" + libro.getIsbn() + "\t\t" + libro.getNoLibros() + "\t" + libro.getNoPrestados() + "\t" + libro.getNoListaEspera() + "\n");
+                                                System.out.print(libro.getAutor() + "\t" + libro.getPais() + "\t" + libro.getIdioma() + "\t" + libro.getAnio()+ "\n");
                                                 System.out.print("¿ Es este el libro al que desea comprar más unidades (s/n) ?\n");
                                                 confirmacionCompra = scChar.next().charAt(0);
                                                 if (confirmacionCompra != 's') { // Si el usuario no ha confirmado con s:
@@ -252,7 +253,7 @@ public class GestorBibliotecaCliente {
                                             if (result_11 != null) {
                                                 // Hemos recibido el resultado bien, podemos guardarlo en libro y escribir por pantalla.
                                                 libro = result_11;
-                                                System.out.print((result_10 + 1) + "\t" + libro.getTitulo() + "\t" + libro.getIsbn() + "\t" + libro.getNoLibros() + "\t" + libro.getNoListaEspera() + "\n");
+                                                System.out.print((result_10 + 1) + "\t" + libro.getTitulo() + "\t" + libro.getIsbn() + "\t\t" + libro.getNoLibros() + "\t" + libro.getNoPrestados() + "\t" + libro.getNoListaEspera() + "\n");
                                                 System.out.print(libro.getAutor() + "\t" + libro.getPais() + "\t" + libro.getIdioma() + "\t" + libro.getAnio() + "\n");
                                             }
                                         }
@@ -327,7 +328,7 @@ public class GestorBibliotecaCliente {
                                         if (result_9 == -1) {
                                             System.out.print("ERROR: el repositorio no existe\n");
                                         } else {
-                                            System.out.print("POS\tTITULO\tISBN\tDIS\tPRE\tPOS\n");
+                                            System.out.print("POS\tTITULO\tISBN\tDIS\tPRE\tESP\n");
                                             System.out.print("\tAUTOR\tPAIS (IDIOMA)\tANIO\n");
                                             System.out.print("*********************************************************************************************\n");
 
@@ -397,7 +398,7 @@ public class GestorBibliotecaCliente {
                                                         }
                                                     }
                                                     if (punteroAlgunaCoincidencia[0] != false || punteroAlgunaCoincidencia[1] != false || punteroAlgunaCoincidencia[2] != false || punteroAlgunaCoincidencia[3] != false || punteroAlgunaCoincidencia[4] != false) {
-                                                        System.out.print(i + "\t" + libro.getTitulo() + "\t" + libro.getIsbn() + "\t" + libro.getNoLibros() + "\t" + libro.getNoListaEspera() + "\n");
+                                                        System.out.print((result_10 + 1) + "\t" + libro.getTitulo() + "\t" + libro.getIsbn() + "\t\t" + libro.getNoLibros() + "\t" + libro.getNoPrestados() + "\t" + libro.getNoListaEspera() + "\n");
                                                         System.out.print(libro.getAutor() + "\t" + libro.getPais() + "\t" + libro.getIdioma() + "\t" + libro.getAnio() + "\n");
                                                     }
                                                 }
@@ -412,7 +413,7 @@ public class GestorBibliotecaCliente {
                                         if (result_9 == -1) {
                                             System.out.print("ERROR: el repositorio no existe\n");
                                         } else {
-                                            System.out.print("POS\tTITULO\tISBN\tDIS\tPRE\tPOS\n");
+                                            System.out.print("POS\tTITULO\tISBN\tDIS\tPRE\tESP\n");
                                             System.out.print("\tAUTOR\tPAIS (IDIOMA)\tANIO\n");
                                             System.out.print("*********************************************************************************************\n");
 
@@ -423,7 +424,7 @@ public class GestorBibliotecaCliente {
                                                 if (result_11 != null) {
                                                     // Hemos recibido el resultado bien, podemos guardarlo en libro y escribir por pantalla.
                                                     libro = result_11;
-                                                    System.out.print(i + "\t" + libro.getTitulo() + "\t" + libro.getIsbn() + "\t" + libro.getNoLibros() + "\t" + libro.getNoListaEspera() + "\n");
+                                                    System.out.print((result_10 + 1) + "\t" + libro.getTitulo() + "\t" + libro.getIsbn() + "\t\t" + libro.getNoLibros() + "\t" + libro.getNoPrestados() + "\t" + libro.getNoListaEspera() + "\n");
                                                     System.out.print(libro.getAutor() + "\t" + libro.getPais() + "\t" + libro.getIdioma() + "\t" + libro.getAnio() + "\n");
                                                 }
                                             }
