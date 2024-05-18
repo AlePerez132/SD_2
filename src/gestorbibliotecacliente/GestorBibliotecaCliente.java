@@ -99,7 +99,7 @@ public class GestorBibliotecaCliente {
                             do {
                                 opcionElegida = menuAdministracion();
                                 switch (opcionElegida) {
-                                    case 0: {
+                                    case 0: { //Desconexion
                                         result_2 = GestorStub.Desconexion(idAdministrador);
                                         if (result_2 == false) {
                                             System.out.print("ERROR: el id administrador no coincide con el del servidor\n");
@@ -108,7 +108,7 @@ public class GestorBibliotecaCliente {
                                         }
                                         break;
                                     }
-                                    case 1: {
+                                    case 1: { //Abrir repositorio
                                         System.out.print("Introduce el nombre del fichero de datos:\n");
                                         nombreFichero = scString.nextLine();
                                         result_3 = GestorStub.AbrirRepositorio(idAdministrador, nombreFichero);
@@ -121,7 +121,7 @@ public class GestorBibliotecaCliente {
                                         }
                                         break;
                                     }
-                                    case 2: {
+                                    case 2: { // Guardar repositorio
                                         numeroRepositorios = GestorStub.NRepositorios(idAdministrador);
                                         System.out.println("El numero de repositorios es " + numeroRepositorios);
                                         System.out.println("POS\tNOMBRE\tDIRECCION\tNº LIBROS");
@@ -146,7 +146,7 @@ public class GestorBibliotecaCliente {
                                         }
                                         break;
                                     }
-                                    case 3: {
+                                    case 3: { //Nuevo libro
                                         // Pedimos los datos del nuevo libro:
                                         System.out.print("Introduce el Isbn:\n");
                                         isbn = scString.nextLine();
@@ -183,7 +183,7 @@ public class GestorBibliotecaCliente {
                                         libro.setIdioma(idioma);
 
                                         // Inicializamos los valores no pedidos por consola:
-                                        libro.setNoLibros(0);
+                                        libro.setNoLibros(numeroLibrosInicial);
                                         libro.setNoListaEspera(0);
                                         libro.setNoPrestados(0);
 
@@ -200,7 +200,7 @@ public class GestorBibliotecaCliente {
                                         }
                                         break;
                                     }
-                                    case 4: {
+                                    case 4: { //Comprar libro
                                         System.out.print("Introduce Isbn a Buscar:\n");
                                         isbnCompra = scString.nextLine();
                                         // Por ISBN.
@@ -226,7 +226,7 @@ public class GestorBibliotecaCliente {
                                         }
                                         break;
                                     }
-                                    case 8: {
+                                    case 8: { //Listar libro
                                         // Recogemos del servidor el numero de libros:
                                         result_9 = GestorStub.NLibros(-1); // Recogemos el nº de libros del servidor (todos los repositorios con *).
                                         if (result_9 == -1) {
@@ -237,7 +237,7 @@ public class GestorBibliotecaCliente {
                                             System.out.print("*********************************************************************************************\n");
 
                                             NumLibros = result_9;
-
+                                                //MODIFICADO TEMPORALMENTE PARA ACCEDER AL PRIMER REPOSITORIO
                                             for (int i = 1; i <= NumLibros; i++) {
                                                 result_11 = GestorStub.Descargar(idAdministrador, -1, i);
                                                 if (result_11 != null) {
